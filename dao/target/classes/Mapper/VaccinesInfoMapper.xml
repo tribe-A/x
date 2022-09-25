@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.dao.VaccinesInfoMapper">
+  <resultMap id="BaseResultMap" type="VaccinesInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="vaccine_id" jdbcType="VARCHAR" property="vaccineId" />
+    <result column="pet_id" jdbcType="VARCHAR" property="petId" />
+    <result column="vaccine_date" jdbcType="TIMESTAMP" property="vaccineDate" />
+    <result column="vaccine_doctor" jdbcType="VARCHAR" property="vaccineDoctor" />
+    <result column="vaccine_site" jdbcType="VARCHAR" property="vaccineSite" />
+    <result column="next_date" jdbcType="TIMESTAMP" property="nextDate" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="vaccine_status" jdbcType="TINYINT" property="vaccineStatus" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, vaccine_id,pet_id, vaccine_date, vaccine_doctor, vaccine_site, next_date, remarks, vaccine_status,
+    is_delete, create_user, update_user, create_time, update_time
+  </sql>
+  <select id="selectByVaccineKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vaccines_info
+    where vaccine_id = #{vaccineId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPetKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vaccines_info
+    where pet_id = #{petId,jdbcType=VARCHAR} AND is_delete = 0
+  </select>
+  <delete id="deleteByVaccineKey" parameterType="java.lang.String">
+    delete from vaccines_info
+    where vaccine_id = #{vaccineId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="VaccinesInfo" useGeneratedKeys="true">
+    insert into vaccines_info (vaccine_id,pet_id, vaccine_date, vaccine_doctor,
+      vaccine_site, next_date, remarks,create_user,update_user, create_time, update_time
+      )
+    values (#{vaccineId,jdbcType=VARCHAR},#{petId,jdbcType=VARCHAR}, #{vaccineDate,jdbcType=TIMESTAMP}, #{vaccineDoctor,jdbcType=VARCHAR},
+      #{vaccineSite,jdbcType=VARCHAR}, #{nextDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},
+    #{createUser,jdbcType=VARCHAR},
+      #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="VaccinesInfo" useGeneratedKeys="true">
+    insert into vaccines_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="vaccineId != null">
+        vaccine_id,
+      </if>
+      <if test="petId != null">
+        pet_id,
+      </if>
+      <if test="vaccineDate != null">
+        vaccine_date,
+      </if>
+      <if test="vaccineDoctor != null">
+        vaccine_doctor,
+      </if>
+      <if test="vaccineSite != null">
+        vaccine_site,
+      </if>
+      <if test="nextDate != null">
+        next_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="vaccineStatus != null">
+        vaccine_status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="vaccineId != null">
+        #{vaccineId,jdbcType=VARCHAR},
+      </if>
+      <if test="petId != null">
+        #{vaccineId,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccineDate != null">
+        #{vaccineDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vaccineDoctor != null">
+        #{vaccineDoctor,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccineSite != null">
+        #{vaccineSite,jdbcType=VARCHAR},
+      </if>
+      <if test="nextDate != null">
+        #{nextDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccineStatus != null">
+        #{vaccineStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByVaccineSelective" parameterType="VaccinesInfo">
+    update vaccines_info
+    <set>
+      <if test="vaccineDate != null">
+        vaccine_date = #{vaccineDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vaccineDoctor != null">
+        vaccine_doctor = #{vaccineDoctor,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccineSite != null">
+        vaccine_site = #{vaccineSite,jdbcType=VARCHAR},
+      </if>
+      <if test="nextDate != null">
+        next_date = #{nextDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="vaccineStatus != null">
+        vaccine_status = #{vaccineStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where vaccine_id = #{vaccineId,jdbcType=VARCHAR} AND is_delete = 0
+  </update>
+  <update id="updateByVaccineKey" parameterType="VaccinesInfo">
+    update vaccines_info
+    set
+      vaccine_date = #{vaccineDate,jdbcType=TIMESTAMP},
+      vaccine_doctor = #{vaccineDoctor,jdbcType=VARCHAR},
+      vaccine_site = #{vaccineSite,jdbcType=VARCHAR},
+      next_date = #{nextDate,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      vaccine_status = #{vaccineStatus,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where vaccine_id = #{vaccineId,jdbcType=VARCHAR}
+  </update>
+</mapper>

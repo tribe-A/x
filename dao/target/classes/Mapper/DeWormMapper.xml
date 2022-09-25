@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.dao.DeWormMapper">
+  <resultMap id="BaseResultMap" type="DewormInfoDo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="deworm_id" jdbcType="VARCHAR" property="dewormId" />
+    <result column="pet_id" jdbcType="VARCHAR" property="petId" />
+    <result column="deworm_date" jdbcType="TIMESTAMP" property="dewormDate" />
+    <result column="deworm_doctor" jdbcType="VARCHAR" property="dewormDoctor" />
+    <result column="deworm_site" jdbcType="VARCHAR" property="dewormSite" />
+    <result column="next_date" jdbcType="TIMESTAMP" property="nextDate" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="deworm_status" jdbcType="TINYINT" property="dewormStatus" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, deworm_id,pet_id, deworm_date, deworm_doctor, deworm_site, next_date, remarks, deworm_status,
+    is_delete, create_user, update_user, create_time, update_time
+  </sql>
+  <select id="selectByPetKey" parameterType="java.lang.String" resultMap="BaseResultMap" resultSets="java.util.ArrayList">
+    select
+    <include refid="Base_Column_List" />
+    from deworm_info
+    where pet_id = #{petId} AND is_delete = 0
+    ORDER BY deworm_date DESC
+  </select>
+  <select id="selectByDeWormKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from deworm_info
+    where deworm_id = #{deWormId} AND is_delete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from deworm_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteByDeWormKey" parameterType="java.lang.String">
+    delete from deworm_info
+    where deworm_id = #{dewormId} AND create_user = #{createUser}
+  </delete>
+
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="DewormInfoDo" useGeneratedKeys="true">
+    insert into deworm_info (deworm_id,pet_id, deworm_date, deworm_doctor,
+      deworm_site, next_date, remarks,
+      deworm_status, is_delete, create_user,
+      update_user, create_time, update_time
+      )
+    values (#{dewormId,jdbcType=VARCHAR},#{petId,jdbcType=VARCHAR}, #{dewormDate,jdbcType=TIMESTAMP}, #{dewormDoctor,jdbcType=VARCHAR},
+      #{dewormSite,jdbcType=VARCHAR}, #{nextDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},
+      #{dewormStatus,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR},
+      #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="DewormInfoDo" useGeneratedKeys="true">
+    insert into deworm_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dewormId != null">
+        deworm_id,
+      </if>
+      <if test="petId != null">
+        pet_id,
+      </if>
+      <if test="dewormDate != null">
+        deworm_date,
+      </if>
+      <if test="dewormDoctor != null">
+        deworm_doctor,
+      </if>
+      <if test="dewormSite != null">
+        deworm_site,
+      </if>
+      <if test="nextDate != null">
+        next_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="dewormStatus != null">
+        deworm_status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dewormId != null">
+        #{dewormId,jdbcType=VARCHAR},
+      </if>
+      <if test="petId != null">
+        #{petId,jdbcType=VARCHAR},
+      </if>
+      <if test="dewormDate != null">
+        #{dewormDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dewormDoctor != null">
+        #{dewormDoctor,jdbcType=VARCHAR},
+      </if>
+      <if test="dewormSite != null">
+        #{dewormSite,jdbcType=VARCHAR},
+      </if>
+      <if test="nextDate != null">
+        #{nextDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="dewormStatus != null">
+        #{dewormStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByDeWormKeySelective" parameterType="DewormInfoDo">
+    update deworm_info
+    <set>
+      <if test="dewormDate != null">
+        deworm_date = #{dewormDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dewormDoctor != null">
+        deworm_doctor = #{dewormDoctor,jdbcType=VARCHAR},
+      </if>
+      <if test="dewormSite != null">
+        deworm_site = #{dewormSite,jdbcType=VARCHAR},
+      </if>
+      <if test="nextDate != null">
+        next_date = #{nextDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="dewormStatus != null">
+        deworm_status = #{dewormStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where  deworm_id = #{dewormId,jdbcType=VARCHAR} AND is_delete = 0
+  </update>
+  <update id="updateByDeWormKey" parameterType="DewormInfoDo">
+    update deworm_info
+    set
+      deworm_date = #{dewormDate,jdbcType=TIMESTAMP},
+      deworm_doctor = #{dewormDoctor,jdbcType=VARCHAR},
+      deworm_site = #{dewormSite,jdbcType=VARCHAR},
+      next_date = #{nextDate,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      deworm_status = #{dewormStatus,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where deworm_id = #{dewormId,jdbcType=VARCHAR},
+  </update>
+</mapper>

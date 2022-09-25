@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.dao.PetInfoMapper">
+    <resultMap id="baseMap" type="PetInfoPo">
+        <id column="id" property="id"/>
+        <result column="pet_id" property="petId"/>
+        <result column="pet_name" property="petName"/>
+        <result column="pet_master_id" property="petMasterId"/>
+        <result column="pet_father_id" property="petFatherId"/>
+        <result column="pet_mather_id" property="petMatherId"/>
+        <result column="pet_weight" property="petWeight"/>
+        <result column="pet_birth_day" property="petBirthDay" javaType="java.util.Date"/>
+        <result column="pet_status" property="petStatus"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+    <sql id="baseSql">
+        id,pet_id,pet_name,pet_master_id,pet_father_id,pet_mather_id,pet_weight,pet_birth_day,pet_status,create_user,create_time,update_user,update_time,is_delete
+    </sql>
+    <select id="selectPetById" resultType="PetInfoPo">
+        SELECT <include refid="baseSql"/> FROM pet_info WHERE pet_id = #{petId} AND pet_master_id = #{petMasterId} AND is_delete = 0
+    </select>
+    <select id="selectPetStatusById" resultType="java.lang.Integer">
+        SELECT pet_status FROM pet_info WHERE pet_id = #{petId}
+    </select>
+    <select id="selectPetByUserId" resultType="PetInfoPo">
+        SELECT <include refid="baseSql"/> FROM pet_info WHERE pet_master_id = #{userId} AND is_delete = 0
+    </select>
+
+    <select id="selectIsPetMaster" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM pet_info WHERE pet_master_id = #{userId} AND pet_id = #{petId}
+    </select>
+    <insert id="addPet" parameterType="PetInfoPo">
+        INSERT INTO pet_info (pet_id,pet_name,avatar,pet_master_id,pet_father_id,pet_mather_id,pet_weight,pet_birth_day,pet_status,is_delete,create_user,create_time,update_user,update_time)
+        VALUES (#{petId},#{petName},#{avatar},#{petMasterId},#{petFatherId},#{petMatherId},#{petWeight},#{petBirthDay},#{petStatus},0,#{createUser},now(),#{updateUser},now())
+    </insert>
+    <update id="updatePet" parameterType="PetInfoPo">
+        UPDATE pet_info SET
+        <if test="avatar != null and avatar != ''" >
+            avatar = #{avatar},
+        </if>
+        <if test="petName != null and petName != ''" >
+            pet_name = #{petName},
+        </if>
+        <if test="petFatherId != null and petFatherId != ''" >
+            pet_father_id = #{petFatherId},
+        </if>
+        <if test="petMatherId != null and petMatherId != ''" >
+            pet_mather_id = #{petMatherId},
+        </if>
+        <if test="petWeight != null and petWeight != ''" >
+            pet_weight = #{petWeight},
+        </if>
+        <if test="petBirthDay != null" >
+            pet_birth_day = #{petBirthDay},
+        </if>
+        <if test="petStatus != null and petStatus != ''" >
+            pet_status = #{petStatus},
+        </if>
+        <if test="isDelete != null and isDelete != ''" >
+            is_delete = #{isDelete},
+        </if>
+        <if test="createUser != null and createUser != ''" >
+            create_user = #{createUser},
+        </if>
+        <if test="createTime != null" >
+            create_time = #{createTime},
+        </if>
+        <if test="updateUser != null and updateUser != ''" >
+            update_user = #{updateUser},
+        </if>
+        <if test="updateTime != null" >
+            update_time = #{updateTime},
+        </if>
+        update_time = now() WHERE pet_id = #{petId} AND pet_master_id = #{petMasterId} AND is_delete = 0
+    </update>
+
+   <delete id="deletePet">
+       DELETE FROM pet_info WHERE pet_id = #{petId}
+   </delete>
+</mapper>

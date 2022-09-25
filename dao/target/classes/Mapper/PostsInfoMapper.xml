@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.dao.PostsInfoMapper">
+  <resultMap id="BaseResultMap" type="com.share.common.pojo.dao.PostsInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="post_id" jdbcType="VARCHAR" property="postId" />
+    <result column="author_id" jdbcType="VARCHAR" property="authorId" />
+    <result column="pet_id" jdbcType="VARCHAR" property="petId" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="files_id" jdbcType="VARCHAR" property="filesId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, post_id, author_id, pet_id, files_id, introduction, `status`, is_delete, create_time, update_time,
+    create_user, update_user
+  </sql>
+  <select id="selectByPostKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from posts_info
+    where post_id = #{postId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPostKey" parameterType="com.share.common.pojo.dao.PostsInfo">
+    delete from posts_info
+    where post_id = #{postId,jdbcType=VARCHAR} AND auth_id = #{authorId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.share.common.pojo.dao.PostsInfo" useGeneratedKeys="true">
+    insert into posts_info (post_id, author_id, pet_id,
+      introduction,files_id,
+      create_time, update_time, create_user,
+      update_user)
+    values (#{postId,jdbcType=VARCHAR}, #{authorId,jdbcType=VARCHAR}, #{petId,jdbcType=VARCHAR},
+      #{introduction,jdbcType=VARCHAR},#{filesId},
+      now(), now(), #{createUser,jdbcType=VARCHAR},
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.share.common.pojo.dao.PostsInfo" useGeneratedKeys="true">
+    insert into posts_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        post_id,
+      </if>
+      <if test="authorId != null">
+        author_id,
+      </if>
+      <if test="petId != null">
+        pet_id,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        #{postId,jdbcType=VARCHAR},
+      </if>
+      <if test="authorId != null">
+        #{authorId,jdbcType=VARCHAR},
+      </if>
+      <if test="petId != null">
+        #{petId,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.share.common.pojo.dao.PostsInfo">
+    update posts_info
+    <set>
+      <if test="postId != null">
+        post_id = #{postId,jdbcType=VARCHAR},
+      </if>
+      <if test="authorId != null">
+        author_id = #{authorId,jdbcType=VARCHAR},
+      </if>
+      <if test="petId != null">
+        pet_id = #{petId,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.share.common.pojo.dao.PostsInfo">
+    update posts_info
+    set post_id = #{postId,jdbcType=VARCHAR},
+      author_id = #{authorId,jdbcType=VARCHAR},
+      pet_id = #{petId,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
