@@ -4,13 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.share.common.pojo.dao.PostsInfo;
 import com.share.common.pojo.dto.Post;
 import com.share.dao.PostsInfoMapper;
+import com.share.service.authentication.service.StorageService;
 import com.share.service.authentication.uid.UidGenerator;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +22,7 @@ public class PostService {
     private PostsInfoMapper postsInfoMapper;
     private UidGenerator uidGenerator;
     private static final String prefix = "P";
+    private StorageService storageService;
 
     public Post addPost(Post post,String userId){
         long uid = uidGenerator.getUID();
@@ -38,7 +42,8 @@ public class PostService {
             BeanUtils.copyProperties(pi,result);
             if (StringUtils.isNotBlank(pi.getFilesId())) {
                 JSONArray ids = (JSONArray) JSONArray.parse(pi.getFilesId());
-                result.setFilesId(ids);
+                List<String> urlList = ids.stream().map(id->(String)id).map(storageService::fileDownloadUrl).collect(Collectors.toList());
+                result.setFilesId(urlList);
             }
             return result;
         }
