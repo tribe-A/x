@@ -14,14 +14,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -90,6 +93,20 @@ public class StorageService {
         return validCallback;
     }
 
+
+    public List<String> filesDownloadUrl(List<String> fileKeys) {
+        if (Objects.nonNull(fileKeys)) {
+            List<String> urlList = fileKeys.stream().map(this::fileDownloadUrl).collect(Collectors.toList());
+            return urlList;
+        }
+        return null;
+    }
+
+    /**
+     * 通过文件KEY获得文件下载URL
+     * @param fileKey 文件KEY
+     * @return  文件下载URL
+     */
     public String fileDownloadUrl(String fileKey) {
         if (StringUtils.isNotBlank(fileKey)) {
             return privateDownloadUrl(downloadUrl + fileKey);

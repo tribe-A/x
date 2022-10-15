@@ -12,7 +12,9 @@ public class PetInfoPo extends BaseInfo{
     private String avatar;
     private String petMasterId;
     private String petMatherId;
+    private String petMatherName;
     private String petFatherId;
+    private String petFatherName;
     private Double petWeight;
     private Date petBirthDay;
     private Integer petStatus;

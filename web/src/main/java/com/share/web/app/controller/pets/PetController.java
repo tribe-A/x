@@ -35,6 +35,17 @@ public class PetController {
         return result;
     }
 
+    @GetMapping("/queryPetById")
+    @ReplaceUserId
+    public BaseResponse findPetById(PetRequest request) {
+        Assert.notNull(request.getPetId(),"请登录后查询");
+        log.info("用户:{},查询PetId:{}",request.getUserId(),request.getPetId());
+        PetDto petByPetId = petService.findPetByPetId(request.getPetId(), request.getUserId());
+        BaseResponse result = BaseResponse.response(true, petByPetId, "查询成功", "查询失败");
+        return result;
+    }
+
+
     @GetMapping("/addPets")
     @ReplaceUserId
     public BaseResponse addPets(@RequestBody PetRequest request){

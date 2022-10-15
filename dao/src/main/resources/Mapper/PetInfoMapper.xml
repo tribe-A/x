@@ -5,9 +5,12 @@
         <id column="id" property="id"/>
         <result column="pet_id" property="petId"/>
         <result column="pet_name" property="petName"/>
+        <result column="avatar" property="avatar"/>
         <result column="pet_master_id" property="petMasterId"/>
         <result column="pet_father_id" property="petFatherId"/>
+        <result column="pet_father_name" property="petFatherName"/>
         <result column="pet_mather_id" property="petMatherId"/>
+        <result column="pet_mather_name" property="petMatherName"/>
         <result column="pet_weight" property="petWeight"/>
         <result column="pet_birth_day" property="petBirthDay" javaType="java.util.Date"/>
         <result column="pet_status" property="petStatus"/>
@@ -19,10 +22,33 @@
     </resultMap>
 
     <sql id="baseSql">
-        id,pet_id,pet_name,pet_master_id,pet_father_id,pet_mather_id,pet_weight,pet_birth_day,pet_status,create_user,create_time,update_user,update_time,is_delete
+        id,pet_id,avatar,pet_name,pet_master_id,pet_father_id,pet_mather_id,pet_weight,pet_birth_day,pet_status,create_user,create_time,update_user,update_time,is_delete
     </sql>
-    <select id="selectPetById" resultType="PetInfoPo">
-        SELECT <include refid="baseSql"/> FROM pet_info WHERE pet_id = #{petId} AND pet_master_id = #{petMasterId} AND is_delete = 0
+    <select id="selectPetById" resultMap="baseMap">
+        SELECT
+            p.id,
+            p.pet_id,
+            p.avatar,
+            p.pet_name,
+            p.pet_master_id,
+            p.pet_father_id,
+            f.pet_name AS pet_father_name,
+            p.pet_mather_id,
+            m.pet_name AS pet_mather_name,
+            p.pet_weight,
+            p.pet_birth_day,
+            p.pet_status,
+            p.create_user,
+            p.create_time,
+            p.update_user,
+            p.update_time,
+            p.is_delete
+        FROM pet_info p
+                 LEFT JOIN
+             pet_info m ON p.pet_mather_id = m.pet_id
+                 LEFT JOIN
+             pet_info f ON p.pet_father_id = m.pet_id
+        WHERE p.pet_id = #{petId} AND (p.pet_master_id = #{petMasterId} OR p.pet_status = 1) AND p.is_delete = 0
     </select>
     <select id="selectPetStatusById" resultType="java.lang.Integer">
         SELECT pet_status FROM pet_info WHERE pet_id = #{petId}

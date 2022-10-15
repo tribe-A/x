@@ -7,6 +7,7 @@ import com.share.common.pojo.constant.PetStatus;
 import com.share.common.pojo.dao.PetInfoPo;
 import com.share.common.pojo.dto.PetDto;
 import com.share.dao.PetInfoMapper;
+import com.share.service.authentication.service.StorageService;
 import com.share.service.authentication.service.common.FileService;
 import com.share.service.authentication.uid.UidGenerator;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class PetService {
     private PetInfoMapper petInfoMapper;
     private UidGenerator uidGenerator;
     private FileService fileService;
+    private StorageService storageService;
 
 
     public PageInfo<PetDto> findPetListByUserId(String userId, PageNumber pageNumber) {
@@ -40,6 +42,7 @@ public class PetService {
         List<PetDto> data = petList.stream().map(p -> {
             PetDto petDto = new PetDto();
             BeanUtils.copyProperties(p, petDto);
+            petDto.setAvatar(storageService.fileDownloadUrl(p.getAvatar()));
             return petDto;
         }).collect(Collectors.toList());
         PageInfo<PetDto> result = new PageInfo<>(data);
@@ -55,6 +58,7 @@ public class PetService {
                 return null;
             }
             BeanUtils.copyProperties(petInfoPo,result);
+            result.setAvatar(storageService.fileDownloadUrl(petInfoPo.getAvatar()));
         }
         return result;
     }
