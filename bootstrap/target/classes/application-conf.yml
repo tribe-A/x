@@ -7,6 +7,15 @@ spring:
     username: root
     password: fiberhome@2021
     url: jdbc:mysql://bj-cynosdbmysql-grp-5uwex01k.sql.tencentcdb.com:24223/pets?characterEncoding=utf-8&useSSL=true
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 60000
+      maximum-pool-size: 10
+      minimum-idle: 10
+      read-only: false
 mybatis:
   config-location: 'classpath:mybatis-config.xml'
   mapper-locations: 'classpath:mapper/*Mapper.xml,classpath:*/mybatis.mapper/*.xml'

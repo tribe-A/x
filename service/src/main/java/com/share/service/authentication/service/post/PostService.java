@@ -1,7 +1,11 @@
 package com.share.service.authentication.service.post;
 
 import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.share.common.pojo.common.PageNumber;
 import com.share.common.pojo.dao.PostsInfo;
+import com.share.common.pojo.dto.PetDto;
 import com.share.common.pojo.dto.Post;
 import com.share.dao.PostsInfoMapper;
 import com.share.service.authentication.service.StorageService;
@@ -12,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,9 +65,21 @@ public class PostService {
 
     }
 
-    public List<Post> queryPost() {
-
-        return null;
+    public PageInfo<Post> queryPost(String userId, String petId, PageNumber pageNumber) {
+        PageHelper.startPage(pageNumber.getPageNum(),pageNumber.getPageSize());
+        List<PostsInfo> list = postsInfoMapper.selectByPetId(userId, petId);
+        List<Post> data = list.stream().map(p -> {
+            Post post = new Post();
+            BeanUtils.copyProperties(p, post);
+            if (p.getFilesId() != null) {
+                JSONArray array = (JSONArray) JSONArray.parse(p.getFilesId());
+                List<String> filesId = array.stream().map(String::valueOf).map(storageService::fileDownloadUrl).collect(Collectors.toList());
+                post.setFilesId(filesId);
+            }
+            return post;
+        }).collect(Collectors.toList());
+        PageInfo<Post> result = new PageInfo<>(data);
+        return result;
     }
 
 }
